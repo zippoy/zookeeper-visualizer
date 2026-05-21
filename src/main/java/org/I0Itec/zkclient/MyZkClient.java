@@ -600,6 +600,23 @@ public class MyZkClient implements Watcher {
         }
     }
 
+    public boolean hasChildren(final String path) {
+        try {
+            return retryUntilConnected(new Callable<Boolean>() {
+                @Override
+                public Boolean call() throws Exception {
+                    if (!(_connection instanceof ZkConnection)) {
+                        return !getChildren(path, false).isEmpty();
+                    }
+                    Stat stat = ((ZkConnection) _connection).getZookeeper().exists(path, false);
+                    return stat != null && stat.getNumChildren() > 0;
+                }
+            });
+        } catch (ZkNoNodeException e) {
+            return false;
+        }
+    }
+
     public boolean exists(final String path) {
         return exists(path, hasListeners(path));
     }

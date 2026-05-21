@@ -3,13 +3,17 @@ package com.xin.view.zktreeview;
 import com.xin.ZkClientWrap;
 import com.xin.ZkNode;
 import com.xin.controller.NodeAddController;
+import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventDispatcher;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -38,6 +42,14 @@ public class ZkNodeTreeCell extends TreeCell<ZkNode> {
     private EventHandler<ActionEvent> addNodeAction = getAddNodeAction();
     private EventHandler<ActionEvent> expandNodeAction = getExpandNodeAction();
     private EventHandler<ActionEvent> unExpandNodeAction = getUnExpandNodeAction();
+    static final String OPEN_FOLDER_ICON_STYLE_CLASS = "zk-node-open-folder-icon";
+    static final String CLOSED_FOLDER_ICON_STYLE_CLASS = "zk-node-closed-folder-icon";
+    static final String FILE_ICON_STYLE_CLASS = "zk-node-file-icon";
+    private static final Image OPEN_FOLDER_ICON = loadIcon("icons/folder_open.png");
+    private static final Image CLOSED_FOLDER_ICON = loadIcon("icons/folder_closed.png");
+    private static final Image FILE_ICON = loadIcon("icons/file.png");
+    private final ChangeListener<Boolean> expandedIconChangeListener = (observable, oldValue, newValue) -> updateNodeIcon();
+    private TreeItem<ZkNode> iconTreeItem;
 
     public ZkNodeTreeCell(ZkTreeView zkTreeView, ZkClientWrap zkClientWrap) {
         this.zkTreeView = zkTreeView;
@@ -62,15 +74,17 @@ public class ZkNodeTreeCell extends TreeCell<ZkNode> {
         super.updateItem(item, empty);
 
         if (empty || getIndex() < 0) {
+            uninstallExpandedIconListener();
             setText(null);
             setGraphic(null);
             addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEventEventHandler);
         } else {
 
-            setContentDisplay(ContentDisplay.TEXT_ONLY);
+            setContentDisplay(ContentDisplay.LEFT);
             setTextFill(Color.BLACK);
             setText(item.getName());
-            setGraphic(null);
+            installExpandedIconListener();
+            updateNodeIcon();
 
             installContextMenu();
 
@@ -84,6 +98,57 @@ public class ZkNodeTreeCell extends TreeCell<ZkNode> {
             }
         });
 //        treeItemDoubleClick();
+    }
+
+    private void updateNodeIcon() {
+        ZkNode item = getItem();
+        TreeItem<ZkNode> treeItem = getTreeItem();
+        if (item != null && treeItem != null) {
+            setGraphic(createNodeIcon(item.isHasChildren(), treeItem.isExpanded()));
+        }
+    }
+
+    private void installExpandedIconListener() {
+        TreeItem<ZkNode> currentTreeItem = getTreeItem();
+        if (iconTreeItem == currentTreeItem) {
+            return;
+        }
+        uninstallExpandedIconListener();
+        iconTreeItem = currentTreeItem;
+        if (iconTreeItem != null) {
+            iconTreeItem.expandedProperty().addListener(expandedIconChangeListener);
+        }
+    }
+
+    private void uninstallExpandedIconListener() {
+        if (iconTreeItem != null) {
+            iconTreeItem.expandedProperty().removeListener(expandedIconChangeListener);
+            iconTreeItem = null;
+        }
+    }
+
+    static Node createNodeIcon(boolean hasChildren, boolean expanded) {
+        ImageView icon = new ImageView(getNodeIcon(hasChildren, expanded));
+        icon.getStyleClass().add(getNodeIconStyleClass(hasChildren, expanded));
+        return icon;
+    }
+
+    private static Image getNodeIcon(boolean hasChildren, boolean expanded) {
+        if (!hasChildren) {
+            return FILE_ICON;
+        }
+        return expanded ? OPEN_FOLDER_ICON : CLOSED_FOLDER_ICON;
+    }
+
+    private static String getNodeIconStyleClass(boolean hasChildren, boolean expanded) {
+        if (!hasChildren) {
+            return FILE_ICON_STYLE_CLASS;
+        }
+        return expanded ? OPEN_FOLDER_ICON_STYLE_CLASS : CLOSED_FOLDER_ICON_STYLE_CLASS;
+    }
+
+    private static Image loadIcon(String path) {
+        return new Image(ZkNodeTreeCell.class.getClassLoader().getResourceAsStream(path));
     }
 
     @Override

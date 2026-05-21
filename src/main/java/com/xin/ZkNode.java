@@ -19,6 +19,7 @@ public class ZkNode {
     private String             path;
     private String             name;
     private boolean            childExpand;
+    private boolean            hasChildren;
     private List<ZkNode>       children;
     private ZkNode parent;
     private ZkNodeTreeItem treeItem;

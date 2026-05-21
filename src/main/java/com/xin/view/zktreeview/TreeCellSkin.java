@@ -271,13 +271,13 @@ public class TreeCellSkin<T> extends CellSkinBase<TreeCell<T>, TreeCellBehavior<
         x += leftMargin;
 
         // position the disclosure node so that it is at the proper indent
-        boolean disclosureVisible = disclosureNode != null && treeItem != null;
+        boolean disclosureVisible = disclosureNode != null && treeItem != null && !treeItem.isLeaf();
 
         final double defaultDisclosureWidth = maxDisclosureWidthMap.containsKey(tree) ?
                 maxDisclosureWidthMap.get(tree) : 18;   // RT-19656: default width of default disclosure node
         double disclosureWidth = defaultDisclosureWidth;
 
-        if (true) {
+        if (disclosureVisible) {
             if (disclosureNode == null || disclosureNode.getScene() == null) {
                 updateChildren();
             }
@@ -362,7 +362,7 @@ public class TreeCellSkin<T> extends CellSkinBase<TreeCell<T>, TreeCellBehavior<
             return;
         }
 
-        boolean disclosureVisible = treeItem != null;
+        boolean disclosureVisible = treeItem != null && !treeItem.isLeaf();
         disclosureNode.setVisible(disclosureVisible);
 
         if (!disclosureVisible) {

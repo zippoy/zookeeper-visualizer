@@ -64,19 +64,3 @@ zookeeper-visualizer是zookeeper的可视化管理工具, 用Java8编写, 使用
 zk新增节点
 ![image](https://raw.githubusercontent.com/xin497668869/zookeeper-visualizer/master/docs/readme3.jpg)
 
-
-
-
-
-
-
-
-
-
-asdfdfasdfo
-`laksdjflkjsadf`
-
-
-
-alksdjflkjasdf
-

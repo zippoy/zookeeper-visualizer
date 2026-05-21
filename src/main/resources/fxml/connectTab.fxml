@@ -22,7 +22,7 @@
             <BorderPane>
                 <top>
                     <HBox>
-                        <SearchTextField fx:id="searchZkNodeTextField" promptText="Search" BorderPane.alignment="CENTER">
+                        <SearchTextField fx:id="searchZkNodeTextField" promptText="Search" minWidth="0" HBox.hgrow="ALWAYS" BorderPane.alignment="CENTER">
                         </SearchTextField>
                         <MenuBar>
                             <Menu text="选项">
@@ -105,6 +105,13 @@
                             </BorderPane.margin>
                         </TextField>
                     </center>
+                    <right>
+                        <Button fx:id="copyPathButton" text="复制" BorderPane.alignment="CENTER">
+                            <BorderPane.margin>
+                                <Insets left="5.0" top="5.0"/>
+                            </BorderPane.margin>
+                        </Button>
+                    </right>
                 </BorderPane>
                 <!--                <BorderPane>-->
                 <!--                    <left>-->

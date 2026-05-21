@@ -125,6 +125,15 @@ public class ZkClientWrap {
         return new ArrayList<>();
     }
 
+    public synchronized boolean hasChildren(String path) {
+        try {
+            return zkClient.hasChildren(path);
+        } catch (Exception e) {
+            log.warn("判断节点是否存在子节点失败 path: {}", path, e);
+        }
+        return false;
+    }
+
     public synchronized void unsubscribeChildChanges(String path, ArrowChangeListener arrowChangeListener) {
         try {
             zkClient.unsubscribeChildChanges(path, arrowChangeListener);

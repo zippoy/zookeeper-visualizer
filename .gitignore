@@ -2,6 +2,8 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 .project
 .DS_Store
+zkSetting.txt
+logs/
 
 ### STS ###
 .apt_generated

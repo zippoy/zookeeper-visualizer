@@ -119,7 +119,8 @@ public class ZkTreeView extends TreeView<ZkNode> {
      * 跟节点初始化, 添加箭头监听, 展开第二层
      */
     private ZkNodeTreeItem initRootItem() {
-        ZkNode root = new ZkNode("/dubbo", "/dubbo");
+        ZkNode root = new ZkNode("/", "/");
+        root.setHasChildren(true);
         ZkNodeTreeItem rootZkNodeTreeItem = new ZkNodeTreeItem(zkClientWrap, root, this);
         setRoot(rootZkNodeTreeItem);
         root.setTreeItem(rootZkNodeTreeItem);

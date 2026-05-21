@@ -40,6 +40,11 @@ public class ZkNodeTreeItem extends TreeItem<ZkNode> {
             .addListener(listener);
     }
 
+    @Override
+    public boolean isLeaf() {
+        return !getValue().isHasChildren();
+    }
+
     public void updateShowTreeItems() {
         getChildren().clear();
         for (TreeItem<ZkNode> source : sources) {
@@ -82,6 +87,7 @@ public class ZkNodeTreeItem extends TreeItem<ZkNode> {
 
         //判断哪些是需要删除的节点, 对需要删除的节点进行删除
         ZkNode zkNode = getValue();
+        zkNode.setHasChildren(!children.isEmpty());
         if (zkNode.getChildren() != null) {
             Iterator<ZkNode> iterator = zkNode.getChildren()
                                               .iterator();
@@ -103,6 +109,7 @@ public class ZkNodeTreeItem extends TreeItem<ZkNode> {
                 path = zkNode.getPath() + "/" + childName;
             }
             ZkNode childNode = new ZkNode(path, childName);
+            childNode.setHasChildren(zkClientWrap.hasChildren(path));
             zkNode.addChild(childNode);
             ZkNodeTreeItem treeItem = new ZkNodeTreeItem(zkClientWrap, childNode, zkTreeView);
             childNode.setTreeItem(treeItem);

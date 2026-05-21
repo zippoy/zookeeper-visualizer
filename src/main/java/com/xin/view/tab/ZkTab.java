@@ -11,6 +11,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.I0Itec.zkclient.IZkStateListener;
@@ -56,6 +58,15 @@ public class ZkTab extends Tab {
         TextArea zkNodeStatTextArea = (TextArea) node1.lookup("#zkNodeStatTextArea");
         Button reloadNodeValueButton = (Button) node1.lookup("#reloadNodeValueButton");
         Button saveNodeValueButton = (Button) node1.lookup("#saveNodeValueButton");
+        Button copyPathButton = (Button) node1.lookup("#copyPathButton");
+        copyPathButton.setOnAction(e -> {
+            String path = zkPathTextField.getText();
+            if (path != null && !path.isEmpty()) {
+                ClipboardContent content = new ClipboardContent();
+                content.putString(path);
+                Clipboard.getSystemClipboard().setContent(content);
+            }
+        });
 
         Button commandStatButton = (Button) node1.lookup("#commandStat");
         Button commandRuokButton = (Button) node1.lookup("#commandRuok");
