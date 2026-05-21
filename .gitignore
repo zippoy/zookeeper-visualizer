@@ -4,6 +4,7 @@ target/
 .DS_Store
 zkSetting.txt
 logs/
+bin/
 
 ### STS ###
 .apt_generated
